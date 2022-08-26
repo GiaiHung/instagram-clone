@@ -22,9 +22,13 @@ function Stories() {
     setSuggestions(suggestions)
   }, [])
 
-  return <div>
-    {suggestions.map(({id, name, avatar}) => <Story key={id} name={name} avatar={avatar} />)}
-  </div>
+  return (
+    <div className="flex gap-x-4 mt-8 p-6 border border-gray-200 rounded-sm overflow-x-scroll scrollbar-thin scrollbar-thumb-gray-500 scrollbar-rounded">
+      {suggestions.map(({ id, name, avatar }) => (
+        <Story key={id} name={name} avatar={avatar} />
+      ))}
+    </div>
+  )
 }
 
 export default Stories

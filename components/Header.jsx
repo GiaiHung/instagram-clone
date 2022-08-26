@@ -14,7 +14,7 @@ import { HomeIcon } from '@heroicons/react/solid'
 
 function Header() {
   return (
-    <div className="sticky top-0 px-12 py-2 bg-white shadow-md">
+    <div className="sticky top-0 px-4 py-2 bg-white shadow-md md:px-12">
       <div className="flex items-center justify-between max-w-6xl mx-auto">
         {/* Left */}
         <div className="hidden relative w-28 h-12 md:inline-grid">
@@ -37,14 +37,14 @@ function Header() {
         </div>
 
         {/* Middle */}
-        <div className="text-gray-500 bg-gray-100 rounded-lg flex items-center gap-x-4 px-3 py-2 group">
+        <div className="hidden text-gray-500 bg-gray-100 rounded-lg md:flex items-center gap-x-4 px-3 py-2">
           <div>
             <SearchIcon className="h-5 w-5 cursor-pointer" />
           </div>
           <input
             type="text"
             placeholder="Search..."
-            className="bg-transparent outline-none focus:group:outline-black"
+            className="bg-transparent outline-none"
           />
         </div>
 

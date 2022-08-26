@@ -28,4 +28,12 @@ button {
   .navBtn {
     @apply hidden md:inline-flex h-7 cursor-pointer hover:scale-125 ease-in duration-150
   }
+
+  .btn {
+    @apply h-7 ease-in-out duration-150 cursor-pointer hover:scale-110 hover:text-gray-500
+  }
+
+  .show-more-btn {
+    @apply text-gray-500 font-bold border-none bg-transparent outline-none cursor-pointer
+  }
 }
