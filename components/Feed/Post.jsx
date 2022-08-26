@@ -12,13 +12,18 @@ import {
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid'
 
 function Post({ id, name, img, userImg, caption }) {
-  const [showMore, setShowMore] = useState('hello')
+  const [showMore, setShowMore] = useState(false)
 
   useEffect(() => {
     if (caption.length > 100) {
       setShowMore(true)
     }
-  }, [caption.length])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if(!showMore) {
+    return null
+  }
 
   return (
     <div className="bg-gray-50 my-4 border border-gray-300 rounded-sm">
