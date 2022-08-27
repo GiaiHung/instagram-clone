@@ -11,19 +11,17 @@ import {
 } from '@heroicons/react/outline'
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid'
 
-function Post({ id, name, img, userImg, caption }) {
+function Post({ name, img, caption }) {
   const [showMore, setShowMore] = useState(false)
+  const [showState, setShowState] = useState(false)
 
   useEffect(() => {
     if (caption.length > 100) {
       setShowMore(true)
     }
+    setShowState(true)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  if(!showMore) {
-    return null
-  }
 
   return (
     <div className="bg-gray-50 my-4 border border-gray-300 rounded-sm">
@@ -55,7 +53,7 @@ function Post({ id, name, img, userImg, caption }) {
       {/* Caption */}
       <div className="flex flex-col gap-y-4 px-4 pt-4">
         <p className="font-bold text-sm">111,110 likes</p>
-        <p className="flex gap-x-4">
+        {showState && <p className="flex gap-x-4">
           <span className="font-bold text-sm">{name}</span>{' '}
           <div>
             {showMore ? `${caption.substring(0, 100)}...` : caption}
@@ -73,7 +71,7 @@ function Post({ id, name, img, userImg, caption }) {
               </>
             )}
           </div>
-        </p>
+        </p>}
       </div>
 
       {/* Input box */}

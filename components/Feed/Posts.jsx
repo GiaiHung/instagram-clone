@@ -10,11 +10,18 @@ const posts = [
     caption: 'This is a test!! This is a test!! This is a test!! This is a test!! This is a test!! This is a test!! This is a test!! This is a test!! This is a test!! This is a test!!',
   },
   {
-    id: 1,
+    id: 2,
     name: 'Johnny',
     img: 'https://links.papareact.com/3ke',
     userImg: 'https://links.papareact.com/3ke',
     caption: 'This is a test!!',
+  },
+  {
+    id: 3,
+    name: 'Johnny',
+    img: 'https://links.papareact.com/3ke',
+    userImg: 'https://links.papareact.com/3ke',
+    caption: 'This is a test 2',
   },
 ]
 

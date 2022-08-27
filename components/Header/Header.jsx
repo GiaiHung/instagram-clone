@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import Image from 'next/image'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 import {
   SearchIcon,
@@ -13,6 +14,8 @@ import {
 import { HomeIcon } from '@heroicons/react/solid'
 
 function Header() {
+  const { data: session } = useSession()
+
   return (
     <div className="sticky top-0 px-4 py-2 bg-white shadow-md md:px-12">
       <div className="flex items-center justify-between max-w-6xl mx-auto">
@@ -41,11 +44,7 @@ function Header() {
           <div>
             <SearchIcon className="h-5 w-5 cursor-pointer" />
           </div>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent outline-none"
-          />
+          <input type="text" placeholder="Search..." className="bg-transparent outline-none" />
         </div>
 
         {/* Right */}
@@ -53,20 +52,29 @@ function Header() {
           <HomeIcon className="navBtn" />
           <MenuIcon className="h-7 md:hidden cursor-pointer" />
 
-          <div className="hidden md:block relative group">
-            <PaperAirplaneIcon className="navBtn rotate-45 origin-center" />
-            <div className="hidden bg-red-500 w-4 h-4 absolute -top-1 -right-2 text-xs text-white rounded-full animate-pulse md:grid place-items-center group-hover:scale-125 ease-in duration-150">
-              3
-            </div>
-          </div>
-          <PlusCircleIcon className="navBtn inline-flex" />
-          <UserGroupIcon className="navBtn" />
-          <HeartIcon className="navBtn" />
-          <img
-            className="w-10 h-10 object-cover rounded-full cursor-pointer"
-            src="https://www.pictureframesexpress.co.uk/blog/wp-content/uploads/2020/05/7-Tips-to-Finding-Art-Inspiration-Header-1024x649.jpg"
-            alt=""
-          />
+          {session ? (
+            <>
+              <div className="hidden md:block relative group">
+                <PaperAirplaneIcon className="navBtn rotate-45 origin-center" />
+                <div className="hidden bg-red-500 w-4 h-4 absolute -top-1 -right-2 text-xs text-white rounded-full animate-pulse md:grid place-items-center group-hover:scale-125 ease-in duration-150">
+                  3
+                </div>
+              </div>
+              <PlusCircleIcon className="navBtn inline-flex" />
+              <UserGroupIcon className="navBtn" />
+              <HeartIcon className="navBtn" />
+              <img
+                className="w-10 h-10 object-cover rounded-full cursor-pointer"
+                src={session?.user?.image}
+                alt=""
+                onClick={() => signOut()}
+              />
+            </>
+          ) : (
+            <>
+              <button className='px-2 py-1 bg-green-500 text-white rounded-full hover:font-semibold' onClick={() => signIn()}>Sign in</button>
+            </>
+          )}
         </div>
       </div>
     </div>
