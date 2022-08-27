@@ -12,9 +12,14 @@ import {
   MenuIcon,
 } from '@heroicons/react/outline'
 import { HomeIcon } from '@heroicons/react/solid'
+import { useRouter } from 'next/router'
+import { useRecoilState } from 'recoil'
+import { modalAtom } from '../../atoms/modalAtom'
 
 function Header() {
   const { data: session } = useSession()
+  const router = useRouter()
+  const [openModal, setOpenModal] = useRecoilState(modalAtom)
 
   return (
     <div className="sticky top-0 px-4 py-2 bg-white shadow-md md:px-12">
@@ -27,6 +32,7 @@ function Header() {
             alt=""
             layout="fill"
             objectFit="contain"
+            onClick={() => router.push('/')}
           />
         </div>
         <div className="relative md:hidden w-12 h-12 flex-shrink-0">
@@ -36,6 +42,7 @@ function Header() {
             alt=""
             layout="fill"
             objectFit="contain"
+            onClick={() => router.push('/')}
           />
         </div>
 
@@ -49,7 +56,7 @@ function Header() {
 
         {/* Right */}
         <div className="flex items-center justify-end gap-x-4">
-          <HomeIcon className="navBtn" />
+          <HomeIcon className="navBtn" onClick={() => router.push('/')} />
           <MenuIcon className="h-7 md:hidden cursor-pointer" />
 
           {session ? (
@@ -60,7 +67,7 @@ function Header() {
                   3
                 </div>
               </div>
-              <PlusCircleIcon className="navBtn inline-flex" />
+              <PlusCircleIcon className="navBtn inline-flex" onClick={() => setOpenModal(true)}/>
               <UserGroupIcon className="navBtn" />
               <HeartIcon className="navBtn" />
               <img
@@ -72,7 +79,12 @@ function Header() {
             </>
           ) : (
             <>
-              <button className='px-2 py-1 bg-green-500 text-white rounded-full hover:font-semibold' onClick={() => signIn()}>Sign in</button>
+              <button
+                className="px-2 py-1 bg-green-500 text-white rounded-full hover:font-semibold"
+                onClick={() => signIn()}
+              >
+                Sign in
+              </button>
             </>
           )}
         </div>
