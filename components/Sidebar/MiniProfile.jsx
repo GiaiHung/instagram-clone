@@ -5,7 +5,7 @@ import { useSession, signOut } from 'next-auth/react'
 function MiniProfile() {
   const { data: session } = useSession()
   return (
-    <div className="flex items-center justify-between mt-8 ml-10">
+    <div className="hidden md:flex items-center justify-between mt-8 ml-10">
       <div className="flex gap-x-3 items-center">
         <img
           className="w-14 h-14 object-cover rounded-full p-[2px] border border-red-500"

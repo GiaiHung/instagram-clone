@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { Fragment, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { modalAtom } from '../../atoms/modalAtom'
@@ -5,10 +6,19 @@ import { CameraIcon } from '@heroicons/react/outline'
 
 import { Dialog, Transition } from '@headlessui/react'
 
+import { db, storage } from '../../firebase'
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
+import { useSession } from 'next-auth/react'
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
+
 function Modal() {
   const [openModal, setOpenModal] = useRecoilState(modalAtom)
-  const filePickerRef = useRef()
-  const [selectedFile, setSelectedFile] = useState()
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const filePickerRef = useRef(null)
+  const captionRef = useRef(null)
+
+  const { data: session } = useSession()
 
   const addImageToPost = (e) => {
     const reader = new FileReader()
@@ -22,7 +32,35 @@ function Modal() {
     }
   }
 
-  console.log(selectedFile);
+  const uploadPost = async () => {
+    if (loading) return
+
+    setLoading(true)
+
+    const docRef = await addDoc(collection(db, 'posts'), {
+      username: session.user.username,
+      caption: captionRef.current.value,
+      profileImg: session.user.image,
+      timestamp: serverTimestamp(),
+    })
+
+    const imageRef = ref(storage, `posts/${docRef.id}/image`)
+
+    await uploadString(imageRef, selectedFile, 'data_url')
+      .then(async (snapshot) => {
+        const downloadURL = await getDownloadURL(imageRef)
+        console.log(downloadURL);
+
+        await updateDoc(doc(db, 'posts', docRef.id), {
+          image: downloadURL,
+        })
+      })
+      .catch((error) => alert(error))
+
+    setSelectedFile(null)
+    setOpenModal(false)
+    setLoading(false)
+  }
 
   return (
     <Transition.Root show={openModal} as={Fragment}>
@@ -55,17 +93,29 @@ function Modal() {
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-              {/* Upload button */}
-              <div
-                className="flex items-center justify-center bg-red-100 w-12 h-12 rounded-full cursor-pointer mx-auto"
-                onClick={() => filePickerRef.current.click()}
-              >
-                <CameraIcon className="text-red-700 w-6 h-6" aria-hidden="true" />
-              </div>
+              {/* Select files button */}
+              {selectedFile ? (
+                <img
+                  className="w-full object-cover"
+                  src={selectedFile}
+                  alt=""
+                  onClick={() => setSelectedFile(null)}
+                />
+              ) : (
+                <div
+                  className="flex items-center justify-center bg-red-100 w-12 h-12 rounded-full cursor-pointer mx-auto"
+                  onClick={() => filePickerRef.current.click()}
+                >
+                  <CameraIcon className="text-red-700 w-6 h-6" aria-hidden="true" />
+                </div>
+              )}
 
               <div className="text-center mt-3">
                 {/* Title */}
-                <Dialog.Title as="h3" className="font-semibold text-lg text-gray-500 leading-6">
+                <Dialog.Title
+                  as="h3"
+                  className="my-6 font-semibold text-lg text-gray-500 leading-6"
+                >
                   Upload a photo
                 </Dialog.Title>
 
@@ -85,6 +135,7 @@ function Modal() {
                     className="w-full border-none outline-none p-2"
                     type="text"
                     placeholder="Please enter a caption"
+                    ref={captionRef}
                   />
                 </div>
               </div>
@@ -93,9 +144,11 @@ function Modal() {
               <div className="mt-5">
                 <button
                   type="button"
-                  className="px-4 py-2 inline-flex justify-center w-full rounded-md text-white bg-red-500 shadow-sm outline-none hover:bg-red-600"
+                  disabled={!selectedFile}
+                  className="px-4 py-2 inline-flex justify-center w-full rounded-md text-white bg-red-500 shadow-sm outline-none hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+                  onClick={uploadPost}
                 >
-                  Upload
+                  {loading ? 'Loading...' : 'Upload Post'}
                 </button>
               </div>
             </div>

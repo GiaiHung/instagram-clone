@@ -11,15 +11,15 @@ import {
 } from '@heroicons/react/outline'
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid'
 
-function Post({ name, img, caption }) {
+function Post({ name, img, caption, userImg }) {
   const [showMore, setShowMore] = useState(false)
   const [showState, setShowState] = useState(false)
 
   useEffect(() => {
+    setShowState(true)
     if (caption.length > 100) {
       setShowMore(true)
     }
-    setShowState(true)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -29,7 +29,7 @@ function Post({ name, img, caption }) {
       <div className="flex items-center p-5">
         <img
           className="w-12 h-12 object-cover rounded-full cursor-pointer"
-          src="https://www.pictureframesexpress.co.uk/blog/wp-content/uploads/2020/05/7-Tips-to-Finding-Art-Inspiration-Header-1024x649.jpg"
+          src={userImg}
           alt=""
         />
         <p className="font-bold text-md ml-4 flex-1">{name}</p>
